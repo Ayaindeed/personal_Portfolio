@@ -30,7 +30,7 @@ portfolio/
 ├── lib/                   # Utilities and helpers
 │   ├── get-blog-posts.ts  # MDX blog post parser
 │   ├── github.ts          # GitHub API integration
-│   ├── mdx-components.ts  # Custom MDX components
+│   ├── mdx-components.tsx # Custom MDX components
 │   └── types.ts           # TypeScript types
 │
 ├── utils/                 # Formatter utilities
