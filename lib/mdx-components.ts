@@ -1,5 +1,3 @@
-import { MDXRemote } from "next-mdx-remote/rsc";
-
 const defaultComponents = {
   h1: ({ children }: any) => (
     <h1 className="text-4xl font-bold text-arch-accent my-6">{children}</h1>
