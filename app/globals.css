@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@100;400;500;700;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Arch Linux Terminal Theme */
+* {
+  @apply transition-colors duration-200;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  @apply bg-arch-darker text-arch-text font-sans;
+  background-image: 
+    linear-gradient(to bottom, rgba(23, 147, 209, 0.05), transparent);
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Terminal-like styling */
+.terminal-text {
+  @apply font-mono text-arch-accent;
+}
+
+.arch-window {
+  @apply border border-arch-border bg-arch-dark rounded;
+  box-shadow: 0 0 20px rgba(23, 147, 209, 0.1);
+}
+
+.arch-window-header {
+  @apply bg-arch-blue text-white px-3 py-2 rounded-t flex items-center justify-between;
+  font-size: 0.875rem;
+  font-family: "Fira Code", monospace;
+}
+
+.arch-button {
+  @apply px-4 py-2 bg-arch-blue text-white rounded hover:bg-arch-accent transition-all duration-200 cursor-pointer border border-arch-blue hover:border-arch-accent;
+  font-weight: 600;
+}
+
+.arch-button:hover {
+  box-shadow: 0 0 15px rgba(23, 147, 209, 0.5);
+}
+
+.arch-input {
+  @apply bg-arch-dark border border-arch-border text-arch-text px-3 py-2 rounded focus:outline-none focus:border-arch-blue focus:ring-1 focus:ring-arch-blue;
+}
+
+.code-block {
+  @apply bg-terminal border border-arch-border rounded p-4 overflow-x-auto;
+}
+
+.code-block code {
+  @apply text-arch-accent font-mono text-sm;
+}
+
+/* Glow effects for Arch theme */
+.arch-glow {
+  box-shadow: 0 0 20px rgba(23, 147, 209, 0.3);
+}
+
+.arch-glow:hover {
+  box-shadow: 0 0 30px rgba(23, 147, 209, 0.5);
+}
+
+/* Link styles */
+a {
+  @apply text-arch-accent hover:text-arch-blue transition-colors;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-arch-dark;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-arch-blue rounded hover:bg-arch-accent;
+}
+
+/* Selection highlighting */
+::selection {
+  @apply bg-arch-blue text-white;
+}

@@ -1,0 +1,175 @@
+---
+title: "Navigating Emotional Days: A Partial Failure Saga"
+description: "A personal data analysis journey exploring emotional states, seasonality, and machine learning predictions"
+date: "2024-03-15"
+---
+
+## Navigating Emotional Days: A Partial Failure Saga
+
+As I embark on sharing the narrative of my pet project, fueled by passion and personal interest, I recognize the importance of centering this initial article around introducing myself and illuminating the motivations that have propelled this journey. However, the current context implies that the article takes a different direction. Still, this moment is truly something I've eagerly anticipated, and I'm thrilled to see it come to fruition.
+
+I initially envisioned this endeavor to be as brilliant and successful as I could imagine, yet it hasn't quite met those expectations.
+
+Here I am, delving into the narrative despite the setbacks the project has faced. If I may use that term, instead of viewing it solely as a failure, why not transform my first article into a narrative of resilience and pride?
+
+The commitment and effort invested in gathering its data already feel monumental to me. While the results may not have aligned with expectations, there's more to the story, with the reasons behind this outcome awaiting exploration in the subsequent sections. This is merely a pause in the journey, not its conclusion. Now, let's delve into the background of this expedition.
+
+## Backstory
+
+I believe it was a few days before the new year (last December 2023, or was it already the beginning of January?). I was sitting on my couch during my break, which always seems to last much longer than the time I set for it. If I say I'm taking a 15-minute break, you might as well consider it a 2-hour rest. Or is it my way of escaping the long learning journeys I've committed myself to?
+
+I was scrolling through TikTok, and I watched a random video of a girl who showed how she was recording her emotions in a specific application. I unintentionally forgot its name, as I just picked up the idea of doing such things on my own. So, I ran to my laptop to open a new sheet.
+
+I guess it's a groundbreaking moment in my existence – cracking open a fresh spreadsheet. Because, you know, who doesn't get an adrenaline rush from endless rows and columns? Or perhaps there's a secret society of spreadsheet enthusiasts out there, finding unparalleled joy in spreadsheet marathons. The epitome of excitement, right?
+
+## Data Collection
+
+I started logging each day, and even though I believe that the two rows weren't significant enough to work on later, I didn't want to add new ones as if I were unable to fill the gaps from the previous days. So, I persisted with my initial approach.
+
+The main purpose of all this work was to enrich my portfolio with a project that deviates from the usual, using data that belongs to me rather than relying on content downloaded from Kaggle or any other source.
+
+Despite occasionally missing timely logs due to factors beyond my control, I made an effort to recollect my state on those specific days. I persevered, and my motivation to reach the end of the year intensified with each passing day. I was eager to witness the results, understand my direction, and gauge the untapped potential within me.
+
+And especially being able to answer the following questions:
+- How do different weather seasons correlate with emotional states?
+- What features, including both emotional and environmental factors, contribute most significantly to the predictions?
+- Can the model provide accurate insights into the likelihood of crying or getting mad, considering the added influence of seasons?
+
+## Analysis of Data
+
+I structured the columns based on key parameters: date, binary entries indicating instances of frustration or tears each day, and a categorical variable representing the season, which had four distinct entries. Additionally, I incorporated data from my menstrual status into the timeframe analysis.
+
+Initially, I believed these data points would be sufficient for deriving meaningful insights. With each passing day, I envisioned dynamic charts evolving on my spreadsheet.
+
+Despite the unsettling nature of the results, the moments when I logged a 1 instead of a 0 left me pondering the eventual appearance of the final results and plots. Admittedly, sharing this deeply personal experience, shaped by a challenging year, is no easy feat. However, my commitment to this learning journey compels me to open up and discuss these intimate aspects.
+
+I began by ensuring there were no missing values in my data and confirming daily log-ins, then examined the distribution of these binary features based on seasons and periods.
+
+The analysis revealed interesting patterns. It appears that I experience more emotional moments, particularly shedding tears, when not in my period. The impact of pre- and post-menstrual syndrome (PMS) seems more pronounced during these times.
+
+Additionally, I observed a higher frequency of crying during the spring season, with fall emerging as the leading season for such emotional moments. Interestingly, there's a notable similarity between spring and summer in terms of emotional experiences.
+
+A notable trend emerges, depicting days labeled as "Mad" and "Not Cried" occurring in close succession. The predominant emotional states throughout the year are "Not Mad" and "Not Cried." This whimsical alignment adds a playful touch to the overall portrayal, making it more than just a visual representation but a lively dance of moods across the calendar.
+
+## Key Findings
+
+### How do different weather seasons correlate with emotional states?
+
+The analysis aimed to explore the relationships between emotional states and the different seasons.
+
+Emotional States: There is a modest positive correlation between 'Mad' and 'Cried', indicating a subtle tendency for these emotional states to co-occur.
+
+Seasonal Correlations:
+- Positive Correlations: 'Season_Spring' shows a positive correlation with 'Cried', while 'Season_Summer' exhibits a positive correlation with 'Mad'.
+- Negative Correlations: 'Season_Winter' displays a negative correlation with 'Mad', suggesting a potential inverse relationship. 'Season_Spring' and 'Season_Summer' show a negative correlation with each other. 'Season_Fall' demonstrates negative correlations with both 'Cried' and 'Season_Spring', hinting at potential associations with different emotional and seasonal patterns.
+
+Interpretive Caution: Correlation does not imply causation, the identified correlations offer insights into potential patterns, but further exploration and contextual understanding are essential for a comprehensive interpretation of the dynamics between emotional states and seasonal variations.
+
+### Which months exhibit the highest frequency of emotional states?
+
+The bar plots highlight March as the dominant month for both emotional states. Notably, March stands out as a significant peak for "Cried," while July closely follows, emphasizing a comparable prominence. For "Mad," the counts in March and July are more evenly matched, indicating a comparable prevalence in these two months.
+
+### What features contribute most significantly to the predictions?
+
+For the Cried Model: Season_Fall stands out as the most influential factor in predicting crying occurrences, suggesting a strong association between the Fall season and the likelihood of crying. The Period is the second most important feature, indicating a noteworthy impact on predicting crying.
+
+For the Mad Model: Season_Summer is identified as the most important feature in predicting getting mad, suggesting a strong correlation between the Summer season and the likelihood of getting mad. Season_Winter follows closely, indicating a significant influence on predicting being mad.
+
+### Can the model provide accurate insights?
+
+The models show reasonable accuracy, but their performance varies for predicting different emotional states. The correlation with seasonal features indicates a potential influence, particularly for crying. However, the low performance metrics for the 'Cried' model suggest that predicting crying may be more challenging, and other factors not captured by the current features might play a significant role.
+
+### How do emotional states relate to menstrual status?
+
+Mad and Cried: The correlation coefficient suggests a weak positive correlation, this indicates a slight tendency for the occurrence of one emotional state to coincide with the other.
+
+Mad and Period: This implies that there is minimal correlation between feeling mad and being on the menstrual status.
+
+Cried and Period: This suggests a slight tendency for the occurrence of crying to coincide with being on the menstrual status.
+
+In summary, the correlations are generally weak, indicating that emotional states are not strongly influenced by the menstrual status. The limited correlations imply that factors beyond the menstrual status contribute more significantly to emotional well-being.
+
+## What Does the Model Need?
+
+Considering the features that I have set at the beginning of this project were not enough and the results have shown this as it wasn't enough for it to decide if they were actually related with the emotional states, for the new data that I'm collecting I've involved new attributes which are mainly more related to the reasons and the count per day of each emotional state and I have added others as in cried/mad were just done as a start for testing purposes yet I'm still trying to figure what it should be added as long as it's still the beginning of the collection.
+
+This journey has taught me that data collection and model building are iterative processes. With more targeted features and a larger dataset, the model could potentially provide more robust predictions about emotional patterns and their correlations with environmental and physiological factors.
+
+I believe it was a few days before the new year (last December 2023, or was it already the beginning of January?). I was sitting on my couch during my break, which always seems to last much longer than the time I set for it. If I say I'm taking a 15-minute break, you might as well consider it a 2-hour rest. Or is it my way of escaping the long learning journeys I've committed myself to?
+
+I was scrolling through TikTok, and I watched a random video of a girl who showed how she was recording her emotions in a specific application. I unintentionally forgot its name, as I just picked up the idea of doing such things on my own. So, I ran to my laptop to open a new sheet.
+
+I guess it's a groundbreaking moment in my existence – cracking open a fresh spreadsheet. Because, you know, who doesn't get an adrenaline rush from endless rows and columns? Or perhaps there's a secret society of spreadsheet enthusiasts out there, finding unparalleled joy in spreadsheet marathons. The epitome of excitement, right?
+
+## Data Collection
+
+I started logging each day, and even though I believe that the two rows weren't significant enough to work on later, I didn't want to add new ones as if I were unable to fill the gaps from the previous days. So, I persisted with my initial approach.
+
+The main purpose of all this work was to enrich my portfolio with a project that deviates from the usual, using data that belongs to me rather than relying on content downloaded from Kaggle or any other source.
+
+Despite occasionally missing timely logs due to factors beyond my control, I made an effort to recollect my state on those specific days. I persevered, and my motivation to reach the end of the year intensified with each passing day. I was eager to witness the results, understand my direction, and gauge the untapped potential within me.
+
+And especially being able to answer the following questions:
+- How do different weather seasons correlate with emotional states?
+- What features, including both emotional and environmental factors, contribute most significantly to the predictions?
+- Can the model provide accurate insights into the likelihood of crying or getting mad, considering the added influence of seasons?
+
+## Analysis of Data
+
+I structured the columns based on key parameters: date, binary entries indicating instances of frustration or tears each day, and a categorical variable representing the season, which had four distinct entries. Additionally, I incorporated data from my menstrual status into the timeframe analysis.
+
+Initially, I believed these data points would be sufficient for deriving meaningful insights. With each passing day, I envisioned dynamic charts evolving on my spreadsheet.
+
+Despite the unsettling nature of the results, the moments when I logged a 1 instead of a 0 left me pondering the eventual appearance of the final results and plots. Admittedly, sharing this deeply personal experience, shaped by a challenging year, is no easy feat. However, my commitment to this learning journey compels me to open up and discuss these intimate aspects.
+
+I began by ensuring there were no missing values in my data and confirming daily log-ins, then examined the distribution of these binary features based on seasons and periods.
+
+The analysis revealed interesting patterns. It appears that I experience more emotional moments, particularly shedding tears, when not in my period. The impact of pre- and post-menstrual syndrome (PMS) seems more pronounced during these times.
+
+Additionally, I observed a higher frequency of crying during the spring season, with fall emerging as the leading season for such emotional moments. Interestingly, there's a notable similarity between spring and summer in terms of emotional experiences.
+
+A notable trend emerges, depicting days labeled as "Mad" and "Not Cried" occurring in close succession. The predominant emotional states throughout the year are "Not Mad" and "Not Cried." This whimsical alignment adds a playful touch to the overall portrayal, making it more than just a visual representation but a lively dance of moods across the calendar.
+
+## Key Findings
+
+### How do different weather seasons correlate with emotional states?
+
+The analysis aimed to explore the relationships between emotional states and the different seasons.
+
+Emotional States: There is a modest positive correlation between 'Mad' and 'Cried', indicating a subtle tendency for these emotional states to co-occur.
+
+Seasonal Correlations:
+- Positive Correlations: 'Season_Spring' shows a positive correlation with 'Cried', while 'Season_Summer' exhibits a positive correlation with 'Mad'.
+- Negative Correlations: 'Season_Winter' displays a negative correlation with 'Mad', suggesting a potential inverse relationship. 'Season_Spring' and 'Season_Summer' show a negative correlation with each other. 'Season_Fall' demonstrates negative correlations with both 'Cried' and 'Season_Spring', hinting at potential associations with different emotional and seasonal patterns.
+
+Interpretive Caution: Correlation does not imply causation, the identified correlations offer insights into potential patterns, but further exploration and contextual understanding are essential for a comprehensive interpretation of the dynamics between emotional states and seasonal variations.
+
+### Which months exhibit the highest frequency of emotional states?
+
+The bar plots highlight March as the dominant month for both emotional states. Notably, March stands out as a significant peak for "Cried," while July closely follows, emphasizing a comparable prominence. For "Mad," the counts in March and July are more evenly matched, indicating a comparable prevalence in these two months.
+
+### What features contribute most significantly to the predictions?
+
+For the Cried Model: Season_Fall stands out as the most influential factor in predicting crying occurrences, suggesting a strong association between the Fall season and the likelihood of crying. The Period is the second most important feature, indicating a noteworthy impact on predicting crying.
+
+For the Mad Model: Season_Summer is identified as the most important feature in predicting getting mad, suggesting a strong correlation between the Summer season and the likelihood of getting mad. Season_Winter follows closely, indicating a significant influence on predicting being mad.
+
+### Can the model provide accurate insights?
+
+The models show reasonable accuracy, but their performance varies for predicting different emotional states. The correlation with seasonal features indicates a potential influence, particularly for crying. However, the low performance metrics for the 'Cried' model suggest that predicting crying may be more challenging, and other factors not captured by the current features might play a significant role.
+
+### How do emotional states relate to menstrual status?
+
+Mad and Cried: The correlation coefficient suggests a weak positive correlation, this indicates a slight tendency for the occurrence of one emotional state to coincide with the other.
+
+Mad and Period: This implies that there is minimal correlation between feeling mad and being on the menstrual status.
+
+Cried and Period: This suggests a slight tendency for the occurrence of crying to coincide with being on the menstrual status.
+
+In summary, the correlations are generally weak, indicating that emotional states are not strongly influenced by the menstrual status. The limited correlations imply that factors beyond the menstrual status contribute more significantly to emotional well-being.
+
+## What Does the Model Need?
+
+Considering the features that I have set at the beginning of this project were not enough and the results have shown this as it wasn't enough for it to decide if they were actually related with the emotional states, for the new data that I'm collecting I've involved new attributes which are mainly more related to the reasons and the count per day of each emotional state and I have added others as in cried/mad were just done as a start for testing purposes yet I'm still trying to figure what it should be added as long as it's still the beginning of the collection.
+
+This journey has taught me that data collection and model building are iterative processes. With more targeted features and a larger dataset, the model could potentially provide more robust predictions about emotional patterns and their correlations with environmental and physiological factors.

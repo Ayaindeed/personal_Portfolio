@@ -1,0 +1,32 @@
+{
+  "name": "arch-portfolio",
+  "version": "1.0.0",
+  "description": "Arch Linux-themed portfolio for full-stack data engineer",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@mdx-js/loader": "^3.0.0",
+    "@mdx-js/react": "^3.0.0",
+    "@next/mdx": "^14.0.0",
+    "autoprefixer": "^10.4.16",
+    "gray-matter": "^4.0.3",
+    "next": "latest",
+    "octokit": "^3.1.0",
+    "postcss": "^8.4.31",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "baseline-browser-mapping": "^2.8.32",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "latest",
+    "typescript": "^5.3.0"
+  }
+}
