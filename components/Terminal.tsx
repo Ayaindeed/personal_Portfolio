@@ -10,7 +10,7 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
   const [isTyping, setIsTyping] = useState(true);
   const [typedText, setTypedText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
-  const fullWelcomeText = "Welcome to Arch Portfolio Terminal. Type 'help' for available commands.";
+  const fullWelcomeText = "Welcome to Aya's Portfolio Terminal. Type 'help' for available commands.";
   
   useEffect(() => {
     if (!isTyping) return;
@@ -64,7 +64,7 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
   const [commandIndex, setCommandIndex] = useState(-1);
 
   const commands: { [key: string]: string } = {
-    help: "Available commands: ls, cd, about, skills, projects, blog, contact, clear, whoami, sudo",
+    help: "Available commands: ls, cd, about, skills, projects, blog, contact, clear, whoami, sudo, rm",
     whoami: "user@arch-portfolio",
     ls: "about/  blog/  projects/  contact/  README.md",
     about: "Full Stack Data Engineer | ETL Pipelines | Analytics",
@@ -73,6 +73,13 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
     blog: "Read blog posts: type 'cd blog' or click Blog in taskbar",
     contact: "Get in touch: type 'cd contact' or click Contact in taskbar",
     clear: "CLEAR_SCREEN",
+    rm: "Usage: rm [options] file...\n\nOptions:\n  -r      remove directories and their contents recursively\n  -f      ignore nonexistent files, never prompt\n\nWARNING: This command can be dangerous. Use with caution.",
+    "rm -rf": "DANGER ZONE DETECTED\n\nrm: missing operand\nTry 'rm --help' for more information.\n\nNote: I'm not that kind of terminal. This is a safe space.",
+    "rm -rf /": "CRITICAL ERROR\n\nrm: it is dangerous to operate recursively on '/'\nrm: use --no-preserve-root to override this failsafe\n\nComment: Deleting root would be a grave mistake.\nThis incident has been logged.",
+    "rm -rf *": "OPERATION BLOCKED\n\nrm: refusing to delete everything in current directory\nrm: use --force-everything flag to override (just kidding)\n\nSuggestion: Try 'rm -rf my_social_life' instead.\nStatus: Already empty anyway.",
+    "rm -rf bugs": "DEBUGGING MODE ACTIVATED\n\nrm: cannot remove 'bugs': No such file or directory\nrm: scan complete - 0 bugs found\n\nComment: I wish debugging were this easy.\nReality: Bugs are feature-resistant.",
+    "rm -rf problems": "ACCESS CONTROL VIOLATION\n\nrm: cannot remove 'problems': Operation not permitted\nrm: insufficient privileges for life-altering operations\n\nRequired: sudo access to existence\nAlternative: Try meditation or coffee.",
+    "rm -rf monday": "FILE SYSTEM ERROR\n\nrm: cannot remove 'monday': Resource busy\nrm: file is currently in use by life.exe\n\nStatus: Monday is read-only and recurring\nWorkaround: None found after extensive testing.",
   };
 
   const handleCommand = (cmd: string) => {
@@ -92,6 +99,22 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
           ];
       const output = responses[Math.floor(Math.random() * responses.length)];
       setHistory((prev) => [...prev, `aya@arch-portfolio:~$ ${cmd}`, output, ""]);
+      setInput("");
+      setCommandIndex(-1);
+      return;
+    }
+
+    // Check for rm -rf variations with responses
+    if (trimmed.startsWith("rm -rf")) {
+      const target = trimmed.substring(6).trim();
+      const rmResponses = [
+        `OPERATION DENIED\n\nrm: cannot remove '${target || "target"}': Access denied\nrm: ${target || "target"} is protected by system safeguards\n\nComment: I have particular skills, but destruction isn't one.\nSuggestion: Try a different approach.`,
+        `SECURITY VIOLATION\n\nrm: '${target || "target"}' is write-protected\nrm: removal blocked by safety protocols\n\nStatus: ${target || "Target"} has plot armor\nAction: Operation cancelled for your protection.`,
+        `SIMULATION MODE\n\nrm: simulating deletion of '${target || "item"}'\n[................] 100% complete\nrm: just kidding - nothing was actually deleted\n\nNote: This is a portfolio, not a file destroyer\nMode: Demonstration only.`,
+        `BACKUP DETECTED\n\nrm: cannot delete '${target || "files"}' - redundant copies exist\nrm: located in cloud storage and memory\n\nStatus: ${target || "Data"} is safely preserved\nAction: Deletion request ignored.`,
+      ];
+      const response = rmResponses[Math.floor(Math.random() * rmResponses.length)];
+      setHistory((prev) => [...prev, `aya@arch-portfolio:~$ ${cmd}`, response, ""]);
       setInput("");
       setCommandIndex(-1);
       return;
@@ -119,14 +142,29 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
             {isTyping && showCursor && <span className="text-arch-blue">█</span>}
           </div>
         )}
-        {history.map((line, idx) => (
-          <pre
-            key={`line-${idx}`}
-            className={line.includes("neofetch") ? "text-arch-accent whitespace-pre" : "text-arch-text whitespace-pre"}
-          >
-            {line}
-          </pre>
-        ))}
+        {history.map((line, idx) => {
+          const isCommand = line.startsWith("aya@arch-portfolio:~$");
+          const isError = line.includes("DANGER") || line.includes("ERROR") || line.includes("DENIED") || line.includes("BLOCKED");
+          const isWarning = line.includes("WARNING") || line.includes("VIOLATION");
+          const isNeofetch = line.includes("neofetch");
+          
+          let className = "text-arch-text whitespace-pre";
+          if (isCommand) {
+            className = "text-arch-accent whitespace-pre font-bold";
+          } else if (isError) {
+            className = "text-red-400 whitespace-pre";
+          } else if (isWarning) {
+            className = "text-yellow-400 whitespace-pre";
+          } else if (isNeofetch) {
+            className = "text-arch-accent whitespace-pre";
+          }
+          
+          return (
+            <pre key={`line-${idx}`} className={className}>
+              {line}
+            </pre>
+          );
+        })}
       </div>
 
       {/* Terminal input */}
