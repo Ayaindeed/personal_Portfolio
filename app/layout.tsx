@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Aya",
-  description: "Arch Linux-themed portfolio showcasing data engineering projects",
+  description: "Personal portfolio and blog",
 };
 
 export default function RootLayout({
