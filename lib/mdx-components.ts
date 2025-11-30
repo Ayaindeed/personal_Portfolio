@@ -1,3 +1,5 @@
+import React from "react";
+
 const defaultComponents = {
   h1: ({ children }: any) => (
     <h1 className="text-4xl font-bold text-arch-accent my-6">{children}</h1>
