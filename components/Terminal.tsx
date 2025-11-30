@@ -85,6 +85,45 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
   const handleCommand = (cmd: string) => {
     const trimmed = cmd.trim().toLowerCase();
     
+    // Check for cd commands
+    if (trimmed.startsWith("cd ")) {
+      const target = trimmed.substring(3).trim();
+      const cdResponses: { [key: string]: string } = {
+        "blog": "NAVIGATION SUCCESSFUL\n\nChanging directory to /home/aya/blog\nRedirecting to blog section...\n\nStatus: Blog posts loaded\nAction: Opening blog interface",
+        "projects": "NAVIGATION SUCCESSFUL\n\nChanging directory to /home/aya/projects\nRedirecting to projects section...\n\nStatus: Project portfolio loaded\nAction: Opening projects interface",
+        "contact": "NAVIGATION SUCCESSFUL\n\nChanging directory to /home/aya/contact\nRedirecting to contact form...\n\nStatus: Communication module active\nAction: Opening contact interface",
+        "about": "NAVIGATION SUCCESSFUL\n\nChanging directory to /home/aya/about\nDisplaying user information...\n\nStatus: Profile data loaded\nAction: Showing about section",
+        "home": "NAVIGATION SUCCESSFUL\n\nChanging directory to /home/aya\nReturning to home directory...\n\nStatus: Home directory active\nAction: Main interface loaded",
+        "~": "NAVIGATION SUCCESSFUL\n\nChanging directory to /home/aya\nReturning to home directory...\n\nStatus: Home directory active\nAction: Main interface loaded",
+      };
+
+      if (cdResponses[target]) {
+        setHistory((prev) => [...prev, `aya@arch-portfolio:~$ ${cmd}`, cdResponses[target], ""]);
+        
+        // Simulate navigation after a short delay
+        setTimeout(() => {
+          if (target === "blog") {
+            window.location.href = "/blog";
+          } else if (target === "projects") {
+            window.location.href = "/projects";
+          } else if (target === "contact") {
+            window.location.href = "/contact";
+          } else if (target === "about") {
+            window.location.href = "/about";
+          } else if (target === "home" || target === "~") {
+            window.location.href = "/";
+          }
+        }, 1500);
+      } else {
+        const errorMsg = `DIRECTORY NOT FOUND\n\ncd: cannot access '${target}': No such directory\n\nAvailable directories:\n  about/  blog/  projects/  contact/\n\nUsage: cd [directory_name]`;
+        setHistory((prev) => [...prev, `aya@arch-portfolio:~$ ${cmd}`, errorMsg, ""]);
+      }
+      
+      setInput("");
+      setCommandIndex(-1);
+      return;
+    }
+
     // Check for sudo commands
     if (trimmed === "sudo" || trimmed.startsWith("sudo ")) {
       const sudoCmd = trimmed === "sudo" ? "" : trimmed.substring(5);
@@ -144,8 +183,9 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
         )}
         {history.map((line, idx) => {
           const isCommand = line.startsWith("aya@arch-portfolio:~$");
-          const isError = line.includes("DANGER") || line.includes("ERROR") || line.includes("DENIED") || line.includes("BLOCKED");
+          const isError = line.includes("DANGER") || line.includes("ERROR") || line.includes("DENIED") || line.includes("BLOCKED") || line.includes("NOT FOUND");
           const isWarning = line.includes("WARNING") || line.includes("VIOLATION") || line.includes("ALERT") || line.includes("AUTHENTICATION REQUIRED") || line.includes("PRIVILEGE ESCALATION");
+          const isSuccess = line.includes("NAVIGATION SUCCESSFUL");
           const isNeofetch = line.includes("neofetch");
           const isSudo = line.includes("[sudo] password for aya:");
           
@@ -154,6 +194,8 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
             className = "text-arch-accent whitespace-pre font-bold";
           } else if (isError) {
             className = "text-red-400 whitespace-pre";
+          } else if (isSuccess) {
+            className = "text-green-400 whitespace-pre";
           } else if (isWarning || isSudo) {
             className = "text-yellow-400 whitespace-pre";
           } else if (isNeofetch) {
