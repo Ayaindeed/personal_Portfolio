@@ -3,7 +3,8 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Aya"
+  title: "Aya",
+  description: "Personal portfolio and blog",
 };
 
 export default function RootLayout({
