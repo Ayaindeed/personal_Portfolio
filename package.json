@@ -1,5 +1,5 @@
 {
-  "name": "arch-portfolio",
+  "name": "aya-portfolio",
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
