@@ -90,12 +90,12 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
       const sudoCmd = trimmed === "sudo" ? "" : trimmed.substring(5);
       const responses = sudoCmd
         ? [
-            `[sudo] password for aya:\nSorry, you don't have permission to ${sudoCmd}.\nThis incident will be reported. ☕`,
-            `[sudo] password for aya:\nNice try! But ${sudoCmd} requires root access.\nIncident logged. 🚨`,
-            `[sudo] password for aya:\nAccess denied. ${sudoCmd} is above your pay grade.\nAdministrator has been notified. 🔒`,
+            `AUTHENTICATION REQUIRED\n\n[sudo] password for aya:\n\nPERMISSION DENIED\n\nSorry, you don't have permission to execute '${sudoCmd}'.\nThis incident will be reported to system administrator.\n\nReason: Insufficient privileges\nAction: Request denied`,
+            `PRIVILEGE ESCALATION BLOCKED\n\n[sudo] password for aya:\n\nACCESS VIOLATION\n\nNice try! Command '${sudoCmd}' requires root access.\nUnauthorized attempt has been logged.\n\nStatus: Security breach detected\nResponse: Incident escalated`,
+            `AUTHORIZATION FAILURE\n\n[sudo] password for aya:\n\nSECURITY ALERT\n\nAccess denied for '${sudoCmd}' - above your clearance level.\nAdministrator notification sent.\n\nClassification: Restricted operation\nOutcome: Request terminated`,
           ]
         : [
-            `[sudo] password for aya:\nWhat do you want to sudo? Try 'sudo <command>'.\nIncident logged anyway. 🚨`,
+            `INCOMPLETE COMMAND\n\n[sudo] password for aya:\n\nSYNTAX ERROR\n\nWhat do you want to sudo? Try 'sudo <command>'.\nEmpty sudo attempt logged for security review.\n\nFormat: sudo [command]\nStatus: Command required`,
           ];
       const output = responses[Math.floor(Math.random() * responses.length)];
       setHistory((prev) => [...prev, `aya@arch-portfolio:~$ ${cmd}`, output, ""]);
@@ -145,15 +145,16 @@ export default function Terminal({ initialCommands = [] }: TerminalProps) {
         {history.map((line, idx) => {
           const isCommand = line.startsWith("aya@arch-portfolio:~$");
           const isError = line.includes("DANGER") || line.includes("ERROR") || line.includes("DENIED") || line.includes("BLOCKED");
-          const isWarning = line.includes("WARNING") || line.includes("VIOLATION");
+          const isWarning = line.includes("WARNING") || line.includes("VIOLATION") || line.includes("ALERT") || line.includes("AUTHENTICATION REQUIRED") || line.includes("PRIVILEGE ESCALATION");
           const isNeofetch = line.includes("neofetch");
+          const isSudo = line.includes("[sudo] password for aya:");
           
           let className = "text-arch-text whitespace-pre";
           if (isCommand) {
             className = "text-arch-accent whitespace-pre font-bold";
           } else if (isError) {
             className = "text-red-400 whitespace-pre";
-          } else if (isWarning) {
+          } else if (isWarning || isSudo) {
             className = "text-yellow-400 whitespace-pre";
           } else if (isNeofetch) {
             className = "text-arch-accent whitespace-pre";
