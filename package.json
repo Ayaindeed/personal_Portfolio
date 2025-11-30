@@ -1,7 +1,6 @@
 {
   "name": "arch-portfolio",
   "version": "1.0.0",
-  "description": "Arch Linux-themed portfolio for full-stack data engineer",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
