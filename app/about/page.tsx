@@ -205,10 +205,10 @@ export default function AboutPage() {
         {/* Resume Download */}
         <ShellPanel title="wget resume">
           <div className="space-y-3">
-            <p className="text-arch-accent font-mono text-sm">$ wget https://aya-portfolio.com/resume.pdf</p>
+            <p className="text-arch-accent font-mono text-sm">$ wget https://aya.app/resume.pdf</p>
             <div className="bg-arch-darker border border-arch-blue p-4 font-mono text-xs">
-              <p className="text-arch-text">--2025-11-30 00:00:00-- https://aya-portfolio.com/resume.pdf</p>
-              <p className="text-arch-text">Resolving aya-portfolio.com... <span className="text-arch-accent">pending</span></p>
+              <p className="text-arch-text">--2025-11-30 00:00:00-- https://aya.app/resume.pdf</p>
+              <p className="text-arch-text">Resolving aya.app... <span className="text-arch-accent">pending</span></p>
               <p className="text-arch-text mt-2">HTTP request sent, awaiting response...</p>
               <p className="text-red-400 mt-1">[ERROR 503] Service Temporarily Unavailable</p>
               <p className="text-arch-accent mt-2">The resume is still being compiled.</p>
