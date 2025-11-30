@@ -47,7 +47,3 @@ Thumbs.db
 # Contact messages
 /messages/
 messages/contacts.json
-
-# Unused design files
-/public/color_palette_f.png
-/public/col_palette.png
