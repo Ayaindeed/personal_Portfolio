@@ -1,6 +1,6 @@
 # Arch Linux-Themed Portfolio
 
-A terminal-inspired portfolio website showcasing data engineering projects, blog posts, and technical expertise with an authentic Arch Linux aesthetic. Built with Next.js, featuring interactive terminal commands, MDX blog support, and a fully responsive design.
+A terminal-inspired portfolio website showcasing projects, blog posts, and technical expertise with an authentic Arch Linux aesthetic. Built with Next.js, featuring interactive terminal commands, MDX blog support, and a fully responsive design.
 
 ## Project Structure
 
