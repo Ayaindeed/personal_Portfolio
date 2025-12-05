@@ -103,7 +103,7 @@ export default function ContactPage() {
     { label: "GitHub", url: "#", icon: "github", status: "Unavailable / soon" },
     { label: "LinkedIn", url: "#", icon: "linkedin", status: "Unavailable / soon" },
     { label: "Email", url: "mailto:aya.mbpj@proton.me", icon: "email", status: "Available" },
-    { label: "Medium", url: "https://medium.com/@aya.bpj", icon: "medium", status: "Available" },
+    { label: "Medium", url: "https://medium.com/@aya.space", icon: "medium", status: "Available" },
   ];
 
   return (
