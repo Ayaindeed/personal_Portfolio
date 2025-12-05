@@ -1,0 +1,340 @@
+# DuckLake Deep Dive: Build a Full Lakehouse with Just Parquet Files and DuckDB
+
+![DuckLake Header](https://aya-blue.vercel.app/content/blog/assets/header_blog.png)
+
+Building a modern data lakehouse doesn't have to be complex. **DuckLake** is revolutionizing how we think about data lakes by combining the simplicity of Parquet files with the power of DuckDB, creating an integrated data lake and catalog format that delivers advanced features without traditional complexity.
+
+## What Problem Does DuckDB Solve?
+
+Traditional data warehouses and data lakes each have their limitations. Data warehouses are fast for analytics but expensive and rigid, while data lakes are cheap and flexible but slow for queries. DuckLake bridges this gap by:
+
+- **Combining the best of both worlds** - warehouse performance with lake flexibility
+- **Eliminating data movement** - query data where it lives
+- **Reducing complexity** - no need for separate ETL pipelines
+- **Maintaining ACID properties** - ensuring data consistency
+
+## What is DuckLake?
+
+DuckLake is an **open, standalone format** from the DuckDB team that delivers advanced data lake features without traditional lakehouse complexity. It uses Parquet files and your SQL database to create a seamless data management experience.
+
+Unlike other lakehouse solutions that require complex infrastructure, DuckLake keeps things simple:
+- **No separate catalog service** - metadata lives alongside your data
+- **Pure Parquet files** - industry-standard columnar format
+- **DuckDB integration** - lightning-fast analytics
+- **ACID transactions** - data consistency guaranteed
+
+### • Our Dataset: NY Taxi Data
+
+Throughout this guide, we'll use **NY Taxi Parquet data** (`yellow_trip_data_2025-01`) from the [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) to demonstrate DuckLake's capabilities. This real-world dataset showcases how DuckLake handles:
+
+- Large-scale data ingestion
+- Complex analytical queries
+- Schema evolution
+- Partitioning strategies
+
+## Getting Started: Installation
+
+### • Installing DuckDB
+
+First, you need to install DuckDB. Visit [DuckDB Installation](https://duckdb.org/install/?platform=windows&environment=cli) for detailed instructions.
+
+**Windows/Terminal:**
+```bash
+winget install DuckDB.cli
+```
+
+**Linux/macOS:**
+```bash
+curl https://install.duckdb.org | sh
+```
+
+### • Installing DuckLake
+```sql
+INSTALL ducklake;
+```
+![DuckLake Installation Commands](https://aya-blue.vercel.app/content/blog/assets/install_ducklake.png)
+
+### • Configuration
+
+To use DuckLake, you need to make two decisions: which metadata catalog database you want to use and where you want to store those files. In the simplest case, you use a local DuckDB file for the metadata catalog and a local folder on your computer for file storage.
+
+### • Creating a New Database
+
+DuckLake databases are created by simply starting to use them with the `ATTACH` statement.
+
+```sql
+ATTACH 'my_ducklake.ducklake' AS my_ducklake (TYPE DUCKLAKE);
+USE my_ducklake;
+```
+![DuckLake Installation Commands](https://aya-blue.vercel.app/content/blog/assets/attach_use_dl.png)
+
+This will create a file `my_ducklake.ducklake`, which is a DuckDB database with the DuckLake schema. We also use `USE` so we don't have to prefix all table names with `my_ducklake`. Once data is inserted, this will also create a folder `my_ducklake.ducklake.files` in the same directory, where Parquet files are stored.
+
+![DuckLake Dir](https://aya-blue.vercel.app/content/blog/assets/dir_ducklake.png)
+
+## Create a DuckLake Table
+
+Let's create our first DuckLake table using the `yellow_trip_data_2025-01` parquet file from the [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page). Note that we could also use a CSV file, but in this case we had a ready parquet file so we used it. The commands shown include:
+
+1. **CREATE TABLE** - Creates the DuckLake table
+2. **FROM glob()** - Queries using glob pattern: `FROM glob('my_ducklake.ducklake.files/**/*')`
+3. **FROM parquet with LIMIT** - Direct parquet query: `FROM 'my_ducklake.ducklake.files/**/*.parquet' LIMIT 10`
+
+![Creating DuckLake Table](https://aya-blue.vercel.app/content/blog/assets/createtable_fromglob_showtable.png)
+
+## Read a DuckLake Table
+
+Now let's examine our table structure using the `DESCRIBE` command. The `DESCRIBE streaming_data` command reveals important details about each column including column_type, null constraints, keys, and other metadata.
+
+![Describing DuckLake Table Structure](https://aya-blue.vercel.app/content/blog/assets/describre%20streaming_data.png)
+
+The beauty of DuckLake is its simplicity - you can start with existing Parquet files and immediately benefit from lakehouse features. Notice how we're doing a `SELECT FROM WHERE` just like we're working on a relational database and querying information, that's the power of DuckLake's integration.
+
+## Read and Update Column Values
+
+DuckLake allows you to read and update column values just like in a traditional database. Let's walk through a practical scenario: imagine we discovered that some tip amounts were incorrectly calculated and need to be adjusted. We want to find records where `total_amount = 144.5` and increase the tip amount by $2.
+
+**• Before Update - Checking records where total_amount = 144.5:**
+![Before Update](https://aya-blue.vercel.app/content/blog/assets/selectfromwhere_beforeupdate.png)
+
+**• Updating Values - Setting tip_amount = tip_amount + 2:**
+![Updating Values](https://aya-blue.vercel.app/content/blog/assets/update_tip_amount=tip_amount+2.png)
+
+**• After Update - Verifying the changes:**
+![After Update](https://aya-blue.vercel.app/content/blog/assets/selectfromwhere_afterupdate.png)
+
+## Look at DuckLake Snapshots
+
+DuckLake's snapshot system tracks every change to your data, providing a complete audit trail. We can query `ducklake_snapshots` to see the transactions we performed.
+
+![Initial Snapshots](https://aya-blue.vercel.app/content/blog/assets/snapshotdisplay1.png)
+
+When we check the snapshots, we can see various changes in the `changes` column including:
+- `schemas_created`
+- `tables_created`  
+- `table_inserted_into`
+
+However, these entries don't have significant meaning for tracking purposes because we can't see **who** made the changes or **why** they were made. Notice that `author`, `commit_message`, and `commit_extra_info` are all **null** , this is because these weren't formal transactions but just normal queries.
+
+### • Time Travel - Viewing Specific Versions
+
+DuckLake supports time travel functionality, allowing you to query data as it existed at specific versions. For example, after our update we're now at version 6. We can run a SELECT to see the content at that specific version:
+
+![Querying Specific Version](https://aya-blue.vercel.app/content/blog/assets/selectfromwhere_version6_statement.png)
+
+Using `FROM streaming_data AT (version => 6)` allows us to access the exact state of our data at that point in time.
+
+## Create and Drop New Column for a Table
+
+One of DuckLake's powerful features is **schema evolution**. You can modify your table structure without breaking existing queries or data. In this section, we're experimenting with different column operations, adding columns with no default value, adding columns with default values, just to see what we're able to do and understand the capabilities.
+
+### • Adding Columns
+
+We'll add a column named 'new_column' with type integer, and then preview that this column exists.
+
+![Adding Columns](https://aya-blue.vercel.app/content/blog/assets/add%20column%20new_column%20int.png)
+![Column Addition Result](https://aya-blue.vercel.app/content/blog/assets/display_new_column.png)
+
+We can check the `ducklake_snapshots` to see how the table alteration is tracked:
+
+![Snapshot After Column Addition](https://aya-blue.vercel.app/content/blog/assets/snapshot_3.png)
+
+### • Adding Column with Default Value
+
+Now let's add another column with a default value 'my_default'. We'll also do a select to see the default value, but this is done in the simple way without transactions.
+
+![Adding Column with Default Value](https://aya-blue.vercel.app/content/blog/assets/addcolumn_with_defaultvalue.png)
+
+Again, we can check the `ducklake_snapshots` to see how this table alteration is recorded:
+
+![Snapshot After Default Value Column](https://aya-blue.vercel.app/content/blog/assets/snapshot4.png)
+
+### • Dropping Columns
+
+Now we'll drop a column normally, then check its existence to verify the operation.
+
+![Dropping Columns](https://aya-blue.vercel.app/content/blog/assets/drop_column_checkifitexists.png)
+
+## ACID Transactions and Commit Messages
+
+DuckLake provides **ACID transaction support** with the ability to add commit messages, ensuring data consistency and providing clear audit trails. This is crucial for production data pipelines.
+
+As we said before, the columns we added and the snapshots verification didn't give us anything relevant - like yes, we added columns, but what for? Without proper transaction context, these changes lack meaningful tracking.
+
+### • Transaction with Commit Message
+
+Now we'll perform a big transaction: add `new_col1_1` with default value 'my_default_2', and we'll call `my_ducklake` with commit message, author, and extra info.
+
+![Transaction with Commit Message](https://aya-blue.vercel.app/content/blog/assets/transaction_with_commit_msg.png)
+
+Let's check `ducklake_snapshots` again to see the difference:
+
+![Snapshot with Commit Message](https://aya-blue.vercel.app/content/blog/assets/snapshotdisplay_withcommitmsg.png)
+
+We can see this time the author, commit_message, and other metadata are properly populated! The transaction system ensures that your data operations are atomic, consistent, isolated, and durable, while commit messages provide context for each change.
+
+## Partitioning a DuckLake
+
+**Partitioning** is essential for query performance at scale. DuckLake makes partitioning straightforward:
+
+First, let's do a SELECT for year and month just to see if this dataset is able to be partitioned, it's just for testing. Indeed, we got 2 years (2024/2025) and 3 months (1/2/12):
+
+![Checking Year/Month Data](https://aya-blue.vercel.app/content/blog/assets/select%20distinct%20to%20check%20year%20month%20in%20data%20first.png)
+
+Next, we'll apply a transaction with commit message that applies year/month partitioning:
+
+![Partitioning by Year/Month](https://aya-blue.vercel.app/content/blog/assets/transaction_partitioningdata%20year_month.png)
+
+Now let's use PowerShell's Get-ChildItem to see the content of the 2 directories that were partitioned - 2 years and the content for each with the parquet files they contain:
+
+![Partition Folder Structure](https://aya-blue.vercel.app/content/blog/assets/powershell_check_the_folder_after_partioning_year_month.png)
+
+Finally, checking the ducklake snapshots, we can see the author and commit message which shows "applied year/month partitioning":
+
+![Snapshot After Partitioning](https://aya-blue.vercel.app/content/blog/assets/from%20ducklake_snpshots_show_change_after_partitioning.png)
+
+The partitioned data structure improves query performance by allowing the engine to skip irrelevant partitions.
+
+## Metadata Management: Comments and Documentation
+
+DuckLake supports comprehensive **metadata management** through table and column comments.
+
+### • Table Comments
+
+Adding comments to tables helps document your data for better collaboration and understanding.
+
+Here we use `COMMENT ON TABLE` to add descriptive metadata to our table.
+
+![Adding Table Comments](https://aya-blue.vercel.app/content/blog/assets/comment_on_table.png)
+
+Using `SELECT table_name, table_comment` we can see our comment "tripdata 2025/01 partitioned". Comments serve as essential documentation for other team members who want to understand the table's purpose, data source, or any specific considerations when using this table.
+
+![Checking Table Comment](https://aya-blue.vercel.app/content/blog/assets/check_table_comment.png)
+
+### • Column Comments
+
+You can also document individual columns to provide specific guidance on their usage.
+
+Here we use `COMMENT ON COLUMN` on the "extra" column with the comment "extra not to be considered".
+
+![Adding Column Comments](https://aya-blue.vercel.app/content/blog/assets/commentoncolumn.png)
+
+Using `SELECT column_name, column_comment` for all columns shows that others are NULL because we only added a comment to one column. Column comments help other users understand what each field contains, any data quality issues, or specific business rules that apply to that column.
+
+![Checking Column Comment](https://aya-blue.vercel.app/content/blog/assets/check_column_comment.png)
+
+## Other Advanced Features
+
+We've talked about partitioning, comments, and transactions - here are some other advanced features that DuckLake offers:
+
+### • Views
+
+Views can be created using the standard `CREATE VIEW` syntax. The views are stored in the metadata, in the `ducklake_view` table.
+
+**Example:**
+Create a view:
+
+```sql
+CREATE VIEW v1 AS SELECT * FROM tbl;
+```
+
+### • Constraints
+
+DuckLake has limited support for constraints. The only constraint type that is currently supported is **NOT NULL**. It does not support PRIMARY KEY, FOREIGN KEY, UNIQUE or CHECK constraints.
+
+**Examples:**
+
+Define a column as not accepting NULL values using the NOT NULL constraint:
+
+```sql
+CREATE TABLE tbl (col INTEGER NOT NULL);
+```
+
+Add a NOT NULL constraint to an existing column of an existing table:
+
+```sql
+ALTER TABLE tbl ALTER col SET NOT NULL;
+```
+
+Drop a NOT NULL constraint from a table:
+
+```sql
+ALTER TABLE tbl ALTER col DROP NOT NULL;
+```
+
+### • Encryption
+
+DuckLake supports an **encrypted mode**. In this mode, all files that are written to the data directory are encrypted using Parquet encryption. In order to use this mode, the `ENCRYPTED` flag must be passed when initializing the DuckLake catalog:
+
+```sql
+ATTACH 'ducklake:encrypted.ducklake'
+    (DATA_PATH 'untrusted_location/', ENCRYPTED);
+```
+
+These encryption features ensure your sensitive data remains protected while maintaining performance.
+
+## Maintenance
+
+### • Expire Snapshots
+
+DuckLake in normal operation never removes any data, even when tables are dropped or data is deleted. Due to time travel, the removed data is still accessible.
+
+Data can only be physically removed from DuckLake by expiring snapshots that refer to the old data. This can be done using the `ducklake_expire_snapshots` function.
+
+**Usage:**
+
+Expire a snapshot with a specific snapshot ID:
+
+```sql
+CALL ducklake_expire_snapshots('my_ducklake', versions => [2]);
+```
+
+Expire snapshots older than a week:
+
+```sql
+CALL ducklake_expire_snapshots('my_ducklake', older_than => now() - INTERVAL '1 week');
+```
+
+Perform a dry run (only lists snapshots to be deleted without actually deleting them):
+
+```sql
+CALL ducklake_expire_snapshots('my_ducklake', dry_run => true, older_than => now() - INTERVAL '1 week');
+```
+
+Set a DuckLake option to expire snapshots for the whole catalog:
+
+```sql
+CALL ducklake.set_option('expire_older_than', '1 month');
+```
+
+### • Cleaning Up Files
+
+Note that expiring snapshots does not immediately delete files that are no longer referenced. See the cleanup old files section on how to trigger a cleanup of these files.
+
+## Why Choose DuckLake?
+
+DuckLake stands out in the lakehouse landscape because:
+
+**Simplicity**: No complex infrastructure or separate catalog services
+**Performance**: Built on DuckDB's lightning-fast analytics engine  
+**Compatibility**: Works with standard Parquet files and SQL
+**Flexibility**: Supports both CSV and Parquet data sources
+**ACID Compliance**: Ensures data consistency and reliability
+**Cost-Effective**: Minimal operational overhead
+
+## Getting Started
+
+Ready to build your own lakehouse? Here's what you need:
+
+1. **Install DuckLake** following the documentation
+2. **Prepare your data** (Parquet files work best, but CSV is supported)
+3. **Start with basic operations** (read/write)
+4. **Add advanced features** as needed (partitioning, ACID transactions)
+5. **Scale up** to production workloads
+
+## Resources
+
+- **Documentation**: [DuckLake Official Docs](https://ducklake.select/docs/stable/)
+- **Video Tutorial**: [DuckLake Deep Dive](https://www.youtube.com/watch?v=0B0J-4aXfKc)
+
+DuckLake proves that building a modern data lakehouse doesn't require complex infrastructure. With just Parquet files and DuckDB, you can create a powerful, scalable data platform that grows with your needs.

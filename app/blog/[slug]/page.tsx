@@ -51,8 +51,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 let inCodeBlock = false;
                 let codeBlockLines: string[] = [];
                 let codeBlockLang = "";
+                let skipFirstH1 = false; // Skip the duplicate H1 title
+
+                const processTextContent = (text: string) => {
+                  return text
+                    // Handle bold text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-arch-accent font-bold">$1</strong>')
+                    // Handle inline code
+                    .replace(/`([^`]+)`/g, '<code class="bg-arch-dark px-2 py-1 rounded text-arch-accent text-sm font-mono">$1</code>')
+                    // Handle markdown links
+                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-arch-accent hover:text-arch-blue underline transition-colors">$1</a>');
+                };
 
                 lines.forEach((line, idx) => {
+                  // Skip the first H1 since we already show the title
+                  if (line.startsWith("# ") && !skipFirstH1) {
+                    skipFirstH1 = true;
+                    return;
+                  }
+
                   // Handle code block start
                   if (line.startsWith("```")) {
                     if (!inCodeBlock) {
@@ -63,7 +80,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                       // Code block end
                       inCodeBlock = false;
                       elements.push(
-                        <div key={`code-${idx}`} className="my-4">
+                        <div key={`code-${idx}`} className="my-6">
                           <div className="bg-arch-darker border border-arch-blue rounded-t px-3 py-1 font-mono text-xs text-arch-accent">
                             {codeBlockLang || "code"}
                           </div>
@@ -86,14 +103,36 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     return;
                   }
 
-                  // Handle images
+                  // Handle HTML img tags
+                  if (line.includes("<img")) {
+                    const srcMatch = line.match(/src="([^"]+)"/);
+                    const altMatch = line.match(/alt="([^"]+)"/);
+                    
+                    if (srcMatch) {
+                      const src = srcMatch[1];
+                      const alt = altMatch ? altMatch[1] : "";
+                      
+                      elements.push(
+                        <div key={idx} className="my-4">
+                          <img 
+                            src={src} 
+                            alt={alt} 
+                            className="w-full rounded border border-arch-border"
+                          />
+                        </div>
+                      );
+                    }
+                    return;
+                  }
+
+                  // Handle markdown images
                   if (line.startsWith("![")) {
                     const match = line.match(/!\[(.*?)\]\((.*?)\)/);
                     if (match) {
                       const [, alt, src] = match;
                       elements.push(
-                        <div key={idx} className="my-6 flex justify-center">
-                          <img src={src} alt={alt} className="border-2 border-arch-blue rounded max-w-sm w-full" />
+                        <div key={idx} className="my-4">
+                          <img src={src} alt={alt} className="w-full rounded border border-arch-border" />
                         </div>
                       );
                     }
@@ -102,39 +141,63 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                   // Handle headings
                   if (line.startsWith("## ")) {
+                    const sectionTitle = line.replace("## ", "");
                     elements.push(
-                      <h2 key={idx} className="text-2xl font-bold text-arch-accent mt-6 mb-3">
-                        {line.replace("## ", "")}
+                      <h2 key={idx} className="text-3xl font-bold text-arch-blue mt-20 mb-6" style={{lineHeight: '2'}}>
+                        {processTextContent(sectionTitle)}
                       </h2>
                     );
                     return;
                   }
                   if (line.startsWith("### ")) {
-                    elements.push(
-                      <h3 key={idx} className="text-xl font-bold text-arch-accent mt-4 mb-2">
-                        {line.replace("### ", "")}
-                      </h3>
-                    );
+                    const content = line.replace("### ", "");
+                    // Check if content starts with any bullet point (• ◆ ■ ▶ ➢ ◇ ➛)
+                    if (content.match(/^[•◆■▶➢◇➛]\s/)) {
+                      // Already has a bullet, render without adding another
+                      elements.push(
+                        <h3 key={idx} className="text-xl font-bold text-arch-accent mt-8 mb-4" style={{lineHeight: '2'}}>
+                          <span dangerouslySetInnerHTML={{ __html: processTextContent(content) }} />
+                        </h3>
+                      );
+                    } else {
+                      // No existing bullet, just render without adding one
+                      elements.push(
+                        <h3 key={idx} className="text-xl font-bold text-arch-accent mt-8 mb-4" style={{lineHeight: '2'}}>
+                          <span dangerouslySetInnerHTML={{ __html: processTextContent(content) }} />
+                        </h3>
+                      );
+                    }
                     return;
                   }
 
                   // Handle lists
                   if (line.startsWith("- ")) {
+                    const content = line.replace("- ", "");
                     elements.push(
-                      <div key={idx} className="flex gap-3 ml-4">
-                        <span className="text-arch-accent">→</span>
-                        <span>{line.replace("- ", "")}</span>
+                      <div key={idx} className="flex gap-3 ml-4 my-3">
+                        <span className="text-arch-accent text-sm mt-1">▶</span>
+                        <span className="text-justify" style={{lineHeight: '1.25'}} dangerouslySetInnerHTML={{ __html: processTextContent(content) }} />
                       </div>
                     );
                     return;
                   }
 
-                  // Regular paragraphs
+                  // Handle numbered lists
+                  if (/^\d+\./.test(line)) {
+                    const content = line.replace(/^\d+\.\s*/, "");
+                    elements.push(
+                      <div key={idx} className="flex gap-3 ml-4 my-3">
+                        <span className="text-arch-blue font-bold text-sm mt-1">●</span>
+                        <span className="text-justify" style={{lineHeight: '1.25'}} dangerouslySetInnerHTML={{ __html: processTextContent(content) }} />
+                      </div>
+                    );
+                    return;
+                  }
+
+                  // Regular paragraphs with formatting
                   if (line.trim()) {
                     elements.push(
-                      <p key={idx} className="leading-relaxed">
-                        {line}
-                      </p>
+                      <p key={idx} className="text-justify my-4" style={{lineHeight: '1.25'}} dangerouslySetInnerHTML={{ __html: processTextContent(line) }} />
                     );
                   }
                 });
