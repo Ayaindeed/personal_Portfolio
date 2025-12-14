@@ -1,3 +1,4 @@
+import React from "react";
 import Navbar from "@/components/Navbar";
 import Taskbar from "@/components/Taskbar";
 import ShellPanel from "@/components/ShellPanel";
@@ -47,7 +48,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <article className="prose prose-invert max-w-none space-y-4 text-arch-text">
               {(() => {
                 const lines = post.content.split("\n");
-                const elements: JSX.Element[] = [];
+                const elements: React.JSX.Element[] = [];
                 let inCodeBlock = false;
                 let codeBlockLines: string[] = [];
                 let codeBlockLang = "";

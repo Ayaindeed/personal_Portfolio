@@ -1,12 +1,13 @@
 "use client";
 
+import React from "react";
 import Navbar from "@/components/Navbar";
 import Taskbar from "@/components/Taskbar";
 import ShellPanel from "@/components/ShellPanel";
 import ShellCard from "@/components/ShellCard";
 
 const renderIcon = (iconName?: string) => {
-  const iconMap: { [key: string]: JSX.Element } = {
+  const iconMap: { [key: string]: React.JSX.Element } = {
     "painting": (
       <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="m14.622 17.897-10.68-2.913"></path>

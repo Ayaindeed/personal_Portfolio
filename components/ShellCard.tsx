@@ -1,3 +1,5 @@
+import React from "react";
+
 interface ShellCardProps {
   title: string;
   icon?: string;
@@ -9,7 +11,7 @@ interface ShellCardProps {
 }
 
 const renderIcon = (iconName?: string) => {
-  const iconMap: { [key: string]: JSX.Element } = {
+  const iconMap: { [key: string]: React.JSX.Element } = {
     "languages": (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M9 18l6-6 6 6M3 12l6-6 6 6"/>
