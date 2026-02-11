@@ -2,7 +2,6 @@
 title: "Kubernetes-Native Data Orchestration: Building Scalable Airflow Pipelines"
 description: "A comprehensive guide to deploying production-grade Apache Airflow on Kubernetes with real-world configurations and troubleshooting"
 date: "2026-02-11"
-author: "Data Mastery Lab"
 tags: ["Kubernetes", "Apache Airflow", "Data Engineering", "DevOps", "Docker", "Helm"]
 published: true
 image: "/content/blog/assets_2/article_cover.png"
@@ -526,9 +525,6 @@ kubectl logs -n airflow -l component=scheduler --tail=100
 
 
 ### Security
-
-- Store secrets in Kubernetes Secrets, not values.yaml
-- Use RBAC to restrict namespace access
 - Enable TLS for database connections
 - Rotate Fernet keys regularly
 
