@@ -5,7 +5,7 @@ date: "2026-02-11"
 author: "Data Mastery Lab"
 tags: ["Kubernetes", "Apache Airflow", "Data Engineering", "DevOps", "Docker", "Helm"]
 published: true
-image: "./assets_2/article_cover.png"
+image: "/content/blog/assets_2/article_cover.png"
 ---
 
 ## Introduction
@@ -22,7 +22,7 @@ Modern data pipelines require:
 
 Kubernetes delivers all of these through its robust architecture:
 
-![Kubernetes Architecture](./assets_2/Kubernetes_Architecture.png)
+![Kubernetes Architecture](/content/blog/assets_2/Kubernetes_Architecture.png)
 
 **Key Components:**
 - **Control Plane**: Manages cluster state through the API server, scheduler, controller manager, and etcd
@@ -33,7 +33,6 @@ Kubernetes delivers all of these through its robust architecture:
 
 **If you've mastered Kubernetes fundamentals and want to deploy production-grade data orchestration platforms, this guide walks through a complete Apache Airflow implementation on Kubernetes with real-world configurations and troubleshooting.**
 
----
 
 ## Prerequisites and Environment Setup
 
@@ -49,11 +48,10 @@ Docker Desktop provides a single-node Kubernetes cluster ideal for development a
 3. Check "Enable Kubernetes"
 4. Apply and restart
 
-![Enabling Kubernetes](./assets_2/enable%20kubernetes%20in%20docker.png)
+![Enabling Kubernetes](/content/blog/assets_2/enable%20kubernetes%20in%20docker.png)
 
 **Note**: Allow 5-10 minutes for Kubernetes cluster initialization. Docker Desktop configures kubectl context automatically.
 
----
 
 ## Installing and Configuring kubectl (Cluster Control Interface)
 
@@ -82,9 +80,9 @@ Verify installation:
 kubectl version --client
 ```
 
-![kubectl Installation](./assets_2/curl%20kubectl%20then%20certutil%20-hashfile%20then%20type%20kubectl.exe.sha256%20then%20kubectl%20version%20client%20either%20normal%20or%20using%20--output=yaml.png)
+![kubectl Installation](/content/blog/assets_2/curl%20kubectl%20then%20certutil%20-hashfile%20then%20type%20kubectl.exe.sha256%20then%20kubectl%20version%20client%20either%20normal%20or%20using%20--output=yaml.png)
 
-![Checking kubectl Version](./assets_2/checking%20kubectl%20version%20--client.png)
+![Checking kubectl Version](/content/blog/assets_2/checking%20kubectl%20version%20--client.png)
 
 ### Essential kubectl Commands
 
@@ -108,7 +106,6 @@ kubectl logs -n <namespace> <pod-name>
 kubectl rollout restart deployment -n <namespace> <deployment-name>
 ```
 
----
 
 ## Setting Up Helm (Package Manager for Kubernetes)
 
@@ -122,7 +119,7 @@ Download Helm from https://helm.sh/docs/intro/install/ and verify:
 helm version
 ```
 
-![Helm Version](./assets_2/helm%20version.png)
+![Helm Version](/content/blog/assets_2/helm%20version.png)
 
 ### Adding Airflow Repository
 
@@ -131,9 +128,8 @@ helm repo add apache-airflow https://airflow.apache.org
 helm repo update
 ```
 
-![Helm Repository Setup](./assets_2/helm%20repo%20add%20apache%20airflow,%20helm%20repo%20update,%20helm%20install%20airflow%20flow.png)
+![Helm Repository Setup](/content/blog/assets_2/helm%20repo%20add%20apache%20airflow,%20helm%20repo%20update,%20helm%20install%20airflow%20flow.png)
 
----
 
 ## Deploying Kubernetes Dashboard (Visual Cluster Management)
 
@@ -147,7 +143,7 @@ Apply the official dashboard manifests:
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
 ```
 
-![Applying Dashboard Manifest](./assets_2/kubectl%20apply%20-f%20github%20repo%20of%20the%20dashboard.png)
+![Applying Dashboard Manifest](/content/blog/assets_2/kubectl%20apply%20-f%20github%20repo%20of%20the%20dashboard.png)
 
 ### Configuring RBAC (Role-Based Access Control for Security)
 
@@ -199,8 +195,8 @@ kubectl apply -f dashboard-adminuser.yaml
 kubectl apply -f dashboard-clusterrole.yaml
 kubectl apply -f dashboard-secret.yaml
 ```
-![Applying Dashboard RBAC](./assets_2/adminuser.png)
-![Applying Dashboard RBAC](./assets_2/kubectl%20apply%20-f%20dashboard%20clusterrole%20%20dashboard%20secret%20.yaml.png)
+![Applying Dashboard RBAC](/content/blog/assets_2/adminuser.png)
+![Applying Dashboard RBAC](/content/blog/assets_2/kubectl%20apply%20-f%20dashboard%20clusterrole%20%20dashboard%20secret%20.yaml.png)
 
 
 ### Accessing the Dashboard
@@ -211,14 +207,14 @@ Start kubectl proxy:
 kubectl proxy
 ```
 
-![kubectl Proxy](./assets_2/kubectl%20proxy%20to%20access%20the%20dashboard.png)
+![kubectl Proxy](/content/blog/assets_2/kubectl%20proxy%20to%20access%20the%20dashboard.png)
 
 Access at:
 ```
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
 ```
 
-![kubernetes Dashboard Access ](./assets_2/access.png)
+![kubernetes Dashboard Access ](/content/blog/assets_2/access.png)
 
 ### Generating Access Token (Authentication for Dashboard Login)
 
@@ -237,19 +233,18 @@ kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath="{.data.token}
 kubectl -n kubernetes-dashboard create token admin-user
 ```
 
-![Getting Admin Token](./assets_2/kubectl%20get%20admin-user.png)
+![Getting Admin Token](/content/blog/assets_2/kubectl%20get%20admin-user.png)
 
 Use the generated token to log in.
 
-![Dashboard Overview](./assets_2/kubernetes%20dashboard%20overview.png)
+![Dashboard Overview](/content/blog/assets_2/kubernetes%20dashboard%20overview.png)
 
----
 
 ## Deploying Apache Airflow on Kubernetes (Scalable Workflow Orchestration)
 
 Apache Airflow orchestrates complex data workflows through Directed Acyclic Graphs (DAGs). Deploying on Kubernetes provides enterprise-grade capabilities that transform Airflow into a production-ready orchestration platform:
 
-![Kubernetes Benefits for Airflow](./assets_2/dep_k_enables.png)
+![Kubernetes Benefits for Airflow](/content/blog/assets_2/dep_k_enables.png)
 
 ### Architecture Considerations
 
@@ -284,7 +279,7 @@ helm install airflow apache-airflow/airflow \
   --debug
 ```
 
-![Airflow Installation](./assets_2/cli%20to%20install%20using%20helm%20install%20airflow%20--namespace%20airflow%20--create-namespace.png)
+![Airflow Installation](/content/blog/assets_2/cli%20to%20install%20using%20helm%20install%20airflow%20--namespace%20airflow%20--create-namespace.png)
 
 **Note**: If you encounter an error like "repo airflow not found", add the repository first:
 
@@ -348,7 +343,7 @@ $fernetKey = kubectl get secret --namespace airflow airflow-fernet-key -o jsonpa
 [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($fernetKey))
 ```
 
-![Fernet Key Command](./assets_2/cmd%20line%20to%20get%20the%20fernet%20key.png)
+![Fernet Key Command](/content/blog/assets_2/cmd%20line%20to%20get%20the%20fernet%20key.png)
 
 Apply configuration:
 
@@ -359,7 +354,7 @@ helm upgrade --install airflow apache-airflow/airflow \
   -f values.yaml
 ```
 
-![Helm Upgrade](./assets_2/helm%20upgrade%20install%20airflow%20using%20the%20values.yaml.png)
+![Helm Upgrade](/content/blog/assets_2/helm%20upgrade%20install%20airflow%20using%20the%20values.yaml.png)
 
 ### Monitoring Deployment (Verifying Pod Health and Readiness)
 
@@ -371,11 +366,10 @@ kubectl get pods -n airflow -w
 
 Wait for all pods to reach Running state. You can verify the deployment status in the Kubernetes Dashboard:
 
-![Workload Status](./assets_2/workload%20status%20in%20kubernetes%20dashboard%20everything%20is%20in%20a%20success%20status.png)
+![Workload Status](/content/blog/assets_2/workload%20status%20in%20kubernetes%20dashboard%20everything%20is%20in%20a%20success%20status.png)
 
 All deployments, pods, and services should show green status indicators once the installation completes successfully.
 
----
 
 ## Accessing Airflow UI (Workflow Management Interface)
 
@@ -389,7 +383,7 @@ Airflow 3.x uses API server instead of traditional webserver:
 kubectl port-forward svc/airflow-api-server 8080:8080 --namespace airflow
 ```
 
-![Port Forwarding](./assets_2/port%20forward%20to%208080%20airflow%20api%20server%20in%20our%20case%20because%20webserver%20didnt%20work.png)
+![Port Forwarding](/content/blog/assets_2/port%20forward%20to%208080%20airflow%20api%20server%20in%20our%20case%20because%20webserver%20didnt%20work.png)
 
 Access at: http://localhost:8080
 
@@ -402,7 +396,6 @@ kubectl rollout restart deployment -n airflow airflow-api-server
 kubectl logs -n airflow -l component=api-server --tail=100
 ```
 
----
 
 ## Creating and Deploying DAGs (Building Data Workflows)
 
@@ -508,7 +501,7 @@ GitSync automatically pulls DAG files from a Git repository, enabling:
 
 The complete workflow involves creating a GitHub repository, pushing your DAG files to a `dags` folder, configuring GitSync in your values.yaml, and letting Airflow automatically synchronize and execute your workflows:
 
-![Deployment Workflow](./assets_2/deployment_workflow.png)
+![Deployment Workflow](/content/blog/assets_2/deployment_workflow.png)
 
 The GitSync process runs continuously as a sidecar container in the scheduler and worker pods, ensuring your DAGs stay synchronized with the latest repository changes.
 
@@ -526,11 +519,10 @@ Monitor task execution:
 kubectl logs -n airflow -l component=scheduler --tail=100
 ```
 
-![DAG Success](./assets_2/hello_word%20dag%20success.png)
+![DAG Success](/content/blog/assets_2/hello_word%20dag%20success.png)
 
-![DAG Success Detail](./assets_2/hello_word%20dag%20success%202.png)
+![DAG Success Detail](/content/blog/assets_2/hello_word%20dag%20success%202.png)
 
----
 
 
 ### Security
@@ -540,7 +532,6 @@ kubectl logs -n airflow -l component=scheduler --tail=100
 - Enable TLS for database connections
 - Rotate Fernet keys regularly
 
----
 
 ## Conclusion
 
@@ -549,7 +540,6 @@ Through this implementation, we've gained hands-on experience with critical prod
 
 These foundational techniques form the backbone of modern data engineering infrastructure at scale.
 
----
 
 ## References
 
@@ -557,3 +547,5 @@ These foundational techniques form the backbone of modern data engineering infra
 - [Airflow Helm Chart](https://airflow.apache.org/docs/helm-chart/)
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
 - [Helm Documentation](https://helm.sh/docs/)
+
+
